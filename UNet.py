@@ -4,7 +4,7 @@ import torch.nn as nn
 class ResidualBlock(nn.Module):
     def __init__(self, *args):
         super(ResidualBlock, self).__init__()
-        self.model_list = [*args]
+        self.model_list = nn.ModuleList([*args])
 
     def forward(self, x):
         input = x
@@ -42,8 +42,8 @@ class UNet(nn.Module):
         super(UNet, self).__init__()
         up_list = list(reversed(down_list))
         up_list.pop(-1)  # [1024, 512, 256, 128, 64]
-        self.down = []
-        self.up = []
+        self.down = nn.ModuleList()
+        self.up = nn.ModuleList()
         for i in range(len(down_list)-1):
             self.down.append(ConvBlock(down_list[i], down_list[i+1]))
             if i != len(down_list) - 2:

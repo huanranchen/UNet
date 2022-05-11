@@ -47,7 +47,7 @@ def train(train_loader,
     #                                             num_warmup_steps=len(train_loader)*warmup_epoch,
     #                                             num_training_steps=total_epoch*len(train_loader),
     #                                             num_cycles=warmup_cycle)
-    criterion = nn.MSELoss().to(device)
+    criterion = nn.BCEWithLogitsLoss().to(device)
 
     if os.path.exists('model.pth'):
         model.load_state_dict(torch.load('model.pth', map_location=device))
@@ -118,8 +118,12 @@ def train(train_loader,
 
 if __name__ == '__main__':
     from UNet import UNet
+
     model = UNet()
     from data import get_loader
-    loader = get_loader(batch_size=1)
-    train(loader, model)
+
+    loader, valid_loader = get_loader(batch_size=16)
+    from train import train
+
+    train(loader, model, valid_loader=valid_loader)
 

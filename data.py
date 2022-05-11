@@ -14,7 +14,13 @@ def get_loader(batch_size = 32, ):
                               target_transform=train_transforms)
     loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
-    return loader
+    dataset = VOCSegmentation(root = './', image_set = 'trainval',
+                              download=False,
+                              transform=train_transforms,
+                              target_transform=train_transforms)
+    v = DataLoader(dataset, batch_size=batch_size, shuffle=True)
+
+    return loader, v
 
 if __name__ == '__main__':
     loader = get_loader(batch_size=1)
