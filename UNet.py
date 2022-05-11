@@ -14,25 +14,39 @@ class ResidualBlock(nn.Module):
         return x + input
 
 class ConvBlock(nn.Module):
-    def __init__(self,in_channel, out_channel):
+    def __init__(self,in_channel, out_channel, activate = True):
         '''
         do not change the shape
         :param in_channel:
         :param out_channel:
         '''
         super(ConvBlock, self).__init__()
-        self.model = nn.Sequential(
-            nn.Conv2d(in_channel, out_channel, 3, padding=1),
-            nn.BatchNorm2d(out_channel),
-            nn.ReLU(),
-            ResidualBlock(
-                nn.Conv2d(out_channel, out_channel, 1),
-                nn.ReLU(),
-                nn.Conv2d(out_channel, out_channel, 3,padding=1),
+        if activate is True:
+            self.model = nn.Sequential(
+                nn.Conv2d(in_channel, out_channel, 3, padding=1),
                 nn.BatchNorm2d(out_channel),
                 nn.ReLU(),
+                # ResidualBlock(
+                #     nn.Conv2d(out_channel, out_channel, 1),
+                #     nn.ReLU(),
+                #     nn.Conv2d(out_channel, out_channel, 3,padding=1),
+                #     nn.BatchNorm2d(out_channel),
+                #     nn.ReLU(),
+                # )
             )
-        )
+        else:
+            self.model = nn.Sequential(
+                nn.Conv2d(in_channel, out_channel, 3, padding=1),
+                nn.BatchNorm2d(out_channel),
+                # nn.ReLU(),
+                # ResidualBlock(
+                #     nn.Conv2d(out_channel, out_channel, 1),
+                #     nn.ReLU(),
+                #     nn.Conv2d(out_channel, out_channel, 3,padding=1),
+                #     nn.BatchNorm2d(out_channel),
+                #     nn.ReLU(),
+                # )
+            )
 
     def forward(self, x):
         return self.model(x)
@@ -53,7 +67,7 @@ class UNet(nn.Module):
             self.up.append(nn.ConvTranspose2d(up_list[i], up_list[i+1], 2, stride = 2))
             self.up.append(ConvBlock(up_list[i], up_list[i+1]))
 
-        self.final = ConvBlock(up_list[-1], 1)
+        self.final = ConvBlock(up_list[-1], 1, activate=False)
 
     def forward(self, x):
         cache = []
