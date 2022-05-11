@@ -11,6 +11,8 @@ from tqdm import tqdm
 from torch.cuda.amp import autocast, GradScaler
 from PIL import Image
 import torch.nn.functional as F
+from criterion import focal_loss
+
 
 def get_cosine_schedule_with_warmup(
         optimizer: Optimizer,
@@ -47,7 +49,7 @@ def train(train_loader,
     #                                             num_warmup_steps=len(train_loader)*warmup_epoch,
     #                                             num_training_steps=total_epoch*len(train_loader),
     #                                             num_cycles=warmup_cycle)
-    criterion = nn.BCEWithLogitsLoss().to(device)
+    criterion = focal_loss
 
     if os.path.exists('model.pth'):
         model.load_state_dict(torch.load('model.pth', map_location=device))
