@@ -14,7 +14,7 @@ def get_loader(batch_size = 32, ):
                               target_transform=train_transforms)
     loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
-    dataset = VOCSegmentation(root = './', image_set = 'trainval',
+    dataset = VOCSegmentation(root = './', image_set = 'val',
                               download=False,
                               transform=train_transforms,
                               target_transform=train_transforms)
