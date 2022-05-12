@@ -1,7 +1,7 @@
 import torch
 from PIL import Image
 import numpy as np
-import torch.nn.functional as F
+
 
 
 def visualization(x, mask, color=255, weight=0):
@@ -23,7 +23,7 @@ def visualization(x, mask, color=255, weight=0):
     x.show()
 
 
-def visualize_one(x, mask, threshold=0.5):
+def visualize_one(x, mask, threshold=0.68):
     y = mask>threshold
     y = y.to(torch.float)
     visualization(x, y)
@@ -41,6 +41,7 @@ if __name__ == '__main__':
     with torch.no_grad():
         for x, y in loader:
             pre = model(x)
-            pre = F.sigmoid(pre)
+            pre = torch.sigmoid(pre)
             visualize_one(x, pre)
+            visualize_one(x, y)
             assert False

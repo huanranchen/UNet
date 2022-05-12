@@ -3,16 +3,23 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
-def focal_loss(x, y, alpha=0.25, gamma=2, eps=1e-5, scale = 10):
-    x = F.sigmoid(x)
+def focal_loss(x, y, alpha=0.07, gamma=2,):
+    batch = x.shape[0]
+    x = torch.sigmoid(x)
+    x = x.clamp(min=0.001, max = 0.999)
     x = x.reshape(-1)
     y = y.reshape(-1)
     positive = (y == 1)
     negative = (y == 0)
 
     p = x[positive]
-    positive_loss = torch.sum(- (1 - p) ** gamma * torch.log(p + eps))
+    positive_loss = torch.sum(- (1 - p) ** gamma * torch.log(p))
     n = x[negative]
-    negative_loss = torch.sum(-n ** gamma * torch.log(1 - n + eps))
+    negative_loss = torch.sum(-n ** gamma * torch.log(1 - n))
 
-    return scale * (alpha * negative_loss + (1 - alpha) * positive_loss)/x.shape[0]
+    # print(positive_loss, negative_loss)
+
+    return (alpha * negative_loss + (1 - alpha) * positive_loss)/batch
+
+
+

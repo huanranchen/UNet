@@ -124,7 +124,7 @@ if __name__ == '__main__':
     model = UNet()
     from data import get_loader
 
-    loader, valid_loader = get_loader(batch_size=16)
+    loader, valid_loader = get_loader(batch_size=1)
     from train import train
 
     train(loader, model, valid_loader=valid_loader)

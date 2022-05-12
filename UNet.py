@@ -25,12 +25,15 @@ class ConvBlock(nn.Module):
         super(ConvBlock, self).__init__()
         if activate is True:
             self.model = nn.Sequential(
+                nn.Dropout(p=0.2),
                 nn.Conv2d(in_channel, out_channel, 3, padding=1),
                 nn.BatchNorm2d(out_channel),
                 nn.ReLU(),
                 ResidualBlock(
+                    nn.Dropout(p=0.2),
                     nn.Conv2d(out_channel, out_channel, 1),
                     nn.ReLU(),
+                    nn.Dropout(p=0.2),
                     nn.Conv2d(out_channel, out_channel, 3, padding=1),
                     nn.BatchNorm2d(out_channel),
                     nn.ReLU(),
@@ -38,12 +41,15 @@ class ConvBlock(nn.Module):
             )
         else:
             self.model = nn.Sequential(
+                nn.Dropout(p=0.2),
                 nn.Conv2d(in_channel, out_channel, 3, padding=1),
                 nn.BatchNorm2d(out_channel),
                 # nn.ReLU(),
                 ResidualBlock(
+                    nn.Dropout(p=0.2),
                     nn.Conv2d(out_channel, out_channel, 1),
                     nn.ReLU(),
+                    nn.Dropout(p=0.2),
                     nn.Conv2d(out_channel, out_channel, 3, padding=1),
                     nn.BatchNorm2d(out_channel),
                     # nn.ReLU(),
